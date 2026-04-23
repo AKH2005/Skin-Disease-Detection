@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DermAI 2.0</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <header>
+    <h2 class="logo">DermAI 2.0</h2>
+    <nav>
+      <a onclick="goTo('home')">Home</a>
+      <a onclick="goTo('upload')">Analyze</a>
+      <a onclick="goTo('about')">About</a>
+    </nav>
+  </header>
+
+  <section id="home" class="hero">
+    <h1>AI Powered <span>Skin Intelligence</span></h1>
+    <p>Upload a skin image and receive prediction, AI care guidance, precautions, diet advice, and medical caution support.</p>
+    <button class="btn" onclick="goTo('upload')">Start Analysis</button>
+  </section>
+
+  <section id="upload" class="container hidden">
+    <h2>Upload Skin Image</h2>
+
+    <div class="upload-box">
+      <label for="image-input" class="upload-label">Click to select an image</label>
+      <input type="file" id="image-input" accept="image/*" onchange="previewImage(event)">
+      <img id="preview" class="preview-image hidden" alt="Preview">
+    </div>
+
+    <div id="upload-error" class="error-box hidden"></div>
+
+    <h3>Patient Details</h3>
+    <div class="form-grid">
+      <div class="field">
+        <label for="name">Patient Name</label>
+        <input type="text" id="name" placeholder="e.g. John Doe">
+      </div>
+
+      <div class="field">
+        <label for="age">Age</label>
+        <input type="number" id="age" placeholder="e.g. 30" min="1" max="120">
+      </div>
+
+      <div class="field">
+        <label for="gender">Gender</label>
+        <select id="gender">
+          <option value="">Select Gender</option>
+          <option>Male</option>
+          <option>Female</option>
+          <option>Other</option>
+        </select>
+      </div>
+
+      <div class="field field-full">
+        <label for="patient-note">Optional Note</label>
+        <input type="text" id="patient-note" placeholder="Any additional note (optional)">
+      </div>
+    </div>
+
+    <button class="btn" id="analyze-btn" onclick="analyzeImage()">Analyze Image</button>
+  </section>
+
+  <section id="loading" class="loading-section hidden">
+    <div class="loader"></div>
+    <p>AI is analyzing your image...</p>
+  </section>
+
+  <section id="results" class="container hidden">
+    <h2>Diagnosis Result</h2>
+
+    <div class="result-card">
+      <h3 id="result-disease"></h3>
+
+      <div id="warning-box" class="warning-box hidden"></div>
+
+      <div class="result-block">
+        <h4>AI Summary</h4>
+        <p id="ai-summary"></p>
+      </div>
+
+      <div class="progress-bar" role="progressbar" aria-label="Confidence level">
+        <div id="confidence-bar"></div>
+      </div>
+      <p id="confidence-text"></p>
+    </div>
+
+    <div id="report-error" class="error-box hidden"></div>
+
+    <div class="action-buttons">
+      <button id="download-pdf-btn" onclick="downloadPDFReport()">Download PDF Report</button>
+      <button id="share-report-btn" onclick="shareReport()">Share Report</button>
+      <button onclick="downloadTextReport()">Download Text Report</button>
+      <button onclick="findDoctors()">Find Dermatologists</button>
+      <button class="btn-secondary" onclick="goTo('upload')">Analyze Another Image</button>
+    </div>
+  </section>
+
+  <section id="ai-care-guide" class="container hidden">
+    <h2>AI Care Guide</h2>
+
+    <div class="result-card">
+      <div class="guide-section"><h4>Overview</h4><p id="care-overview"></p></div>
+      <div class="guide-section"><h4>Simple Explanation</h4><p id="care-simple"></p></div>
+      <div class="guide-section"><h4>Common Symptoms</h4><ul id="care-symptoms"></ul></div>
+      <div class="guide-section"><h4>Early Symptoms</h4><ul id="care-early"></ul></div>
+      <div class="guide-section"><h4>Advanced Symptoms</h4><ul id="care-advanced"></ul></div>
+      <div class="guide-section"><h4>Possible Causes</h4><ul id="care-causes"></ul></div>
+      <div class="guide-section"><h4>Risk Factors</h4><ul id="care-risk-factors"></ul></div>
+      <div class="guide-section"><h4>Condition Type</h4><p id="care-type"></p></div>
+      <div class="guide-section"><h4>Contagious?</h4><p id="care-contagious"></p></div>
+      <div class="guide-section"><h4>Severity Level</h4><p id="care-severity"></p></div>
+      <div class="guide-section"><h4>Safe Home Care</h4><ul id="care-home"></ul></div>
+      <div class="guide-section"><h4>Daily Skin Care Routine</h4><ul id="care-routine"></ul></div>
+      <div class="guide-section"><h4>What to Avoid</h4><ul id="care-avoid"></ul></div>
+      <div class="guide-section"><h4>Hygiene Advice</h4><ul id="care-hygiene"></ul></div>
+      <div class="guide-section"><h4>Sun Exposure Advice</h4><ul id="care-sun"></ul></div>
+      <div class="guide-section"><h4>Clothing Advice</h4><ul id="care-clothing"></ul></div>
+      <div class="guide-section"><h4>Stress & Sleep Advice</h4><ul id="care-stress"></ul></div>
+      <div class="guide-section"><h4>Foods to Eat</h4><ul id="care-foods-good"></ul></div>
+      <div class="guide-section"><h4>Foods to Avoid</h4><ul id="care-foods-bad"></ul></div>
+      <div class="guide-section"><h4>Hydration Advice</h4><ul id="care-hydration"></ul></div>
+      <div class="guide-section"><h4>General Vitamins</h4><ul id="care-vitamins"></ul></div>
+      <div class="guide-section"><h4>When to See a Doctor</h4><ul id="care-doctor"></ul></div>
+      <div class="guide-section"><h4>Urgent Warning Signs</h4><ul id="care-warning"></ul></div>
+      <div class="guide-section"><h4>Emergency Red Flags</h4><ul id="care-emergency"></ul></div>
+      <div class="guide-section"><h4>Work / School Precautions</h4><ul id="care-work"></ul></div>
+      <div class="guide-section"><h4>Exercise Precautions</h4><ul id="care-exercise"></ul></div>
+      <div class="guide-section"><h4>Seasonal Triggers</h4><ul id="care-seasonal"></ul></div>
+      <div class="guide-section"><h4>Recommended Specialist</h4><p id="care-specialist"></p></div>
+      <div class="guide-section"><h4>AI Report Summary</h4><p id="care-summary"></p></div>
+    </div>
+  </section>
+
+  <section id="about" class="container hidden">
+    <h2>About DermAI</h2>
+    <p>
+      DermAI 2.0 combines deep learning image analysis with a structured AI-powered medical guidance system
+      to support early skin condition awareness and patient education.
+    </p>
+  </section>
+
+  <footer>
+    <p>DermAI 2.0 • AI Skin Intelligence Assistant</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
